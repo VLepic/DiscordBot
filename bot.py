@@ -57,12 +57,41 @@ def run_discord_bot(BOTTOKEN):
         else:
             await ctx.send("You are not in a voice channel.")
 
+    @bot.command(pass_context=True)
+    async def abuseall(ctx, targetchannel1: discord.VoiceChannel, targetchannel2: discord.VoiceChannel):
+        channel = ctx.author.voice.channel  # gets the channel you want to get the list from
+
+        members = channel.members  # finds members connected to the channel
+
+        memids = []  # (list)
+        for member in members:
+            memids.append(member.id)
+        for i in memids:
+            originchannel = channel
+            """Move a member to a voice channel."""
+            number = 4
+
+            for i in range(number):
+                try:
+                    await bot.get_user(memids[i]).move_to(targetchannel1)
+
+                except discord.errors.HTTPException as e:
+                    await ctx.send("An error occurred while attempting to move the member.")
+                try:
+                    await memids[i].move_to(targetchannel2)
+
+                except discord.errors.HTTPException as e:
+                    await ctx.send("An error occurred while attempting to move the member.")
+            await memids[i].move_to(originchannel)
+
+
+
+
 
     @bot.command(pass_context=True)
     async def jointo(ctx, channel: discord.VoiceChannel):
         print(f'{datetime.datetime.now()} Uživatel {ctx.author} nařídil připojení do: {channel}.')
         vc = await channel.connect()
-
 
 
     @bot.command(pass_context=True)
